@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="visual">
+    <material name="violetto">
+        <color rgba="1 0 1 1 "/>
+    </material>
+    <material name="acqua_marina">
+        <color rgba="0 1 1 1"/>
+    </material>
+
+    <material name="base">
+        <color rgba="1 1 1 0.5"/>
+    </material>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="0.6 0.4 0.001"/>
+            </geometry>
+            <material name="base"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.6 0.4 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <link name="carrellino">
+        <!--        base link è la terna collegata a questo giunto-->
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="0.6 0.4 0.2"/>
+            </geometry>
+            <material name="violetto"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.6 0.4 0.2"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="10"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <joint name="base_carrellino" type="prismatic">
+        <parent link="base_link"/>
+        <child link="carrellino"/>
+        <limit effort="1000.0" lower="-0.5" upper="0.5" velocity="0.5"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+
+    <link name="left_wheel">
+        <visual>
+            <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.035"/>
+            </geometry>
+            <material name="acqua_marina"/>
+        </visual>
+        <collision>
+            <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.035"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+
+    </link>
+
+    <joint name="left_wheel_joint" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <origin rpy="0 0 0" xyz="-0.2 0 -0.133"/>
+        <parent link="carrellino"/>
+        <child link="left_wheel"/>
+    </joint>
+
+    <link name="right_wheel">
+        <visual>
+            <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.035"/>
+            </geometry>
+            <material name="acqua_marina"/>
+        </visual>
+        <collision>
+            <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.035"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <joint name="right_wheel_joint" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <origin rpy="0 0 0" xyz="0.2 0 -0.133"/>
+        <parent link="carrellino"/>
+        <child link="right_wheel"/>
+    </joint>
+
+    <link name="pendolo">
+        <visual>
+            <!--            origin mi indica dove rispetto alla struttura del pendolo fisso gli assi cartesiani-->
+            <origin rpy="0 0 0" xyz="0 0 0.2"/>
+            <geometry>
+                <cylinder length="0.4" radius="0.035"/>
+            </geometry>
+            <material name="violetto"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0.2"/>
+            <geometry>
+                <cylinder length="0.4" radius="0.035"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="3"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+    <joint name="pendolo_joint" type="revolute">
+        <limit effort="1000.0" lower="-1.5707" upper="1.5707" velocity="0.5"/>
+        <axis rpy="0 0 0" xyz="0 1 0"/>
+        <parent link="carrellino"/>
+        <child link="pendolo"/>
+        <!--        origin mi indica la posizione del pendolo rispetto a base-->
+        <origin rpy="0 0 0" xyz="0 0 0.1"/>
+    </joint>
+</robot>

@@ -10,7 +10,8 @@
     <material name="base">
         <color rgba="1 1 1 0.5"/>
     </material>
-
+<!-- Questo è il link base nella terna base_link rispetto alla quale vengono definite tutte le altre terne
+tale elemento ha il solo scopo di esser di riferimento rispetto al robot mobile -->
     <link name="base_link">
         <visual>
             <geometry>
@@ -30,7 +31,7 @@
     </link>
 
     <link name="carrellino">
-        <!--        base link è la terna collegata a questo giunto-->
+        <!--questo è il solo elemento mobile attuato-->
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -55,6 +56,19 @@
         <limit effort="1000.0" lower="-0.5" upper="0.5" velocity="0.5"/>
         <origin rpy="0 0 0" xyz="0 0 0"/>
     </joint>
+
+
+<transmission name="carrellino_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="carrellino_motor">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="base_carrellino">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
 
     <link name="left_wheel">
         <visual>
@@ -85,6 +99,9 @@
         <child link="left_wheel"/>
     </joint>
 
+   
+
+  
     <link name="right_wheel">
         <visual>
             <origin rpy="1.57075 0 0" xyz="0 0 0"/>
@@ -133,6 +150,7 @@
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
         </inertial>
     </link>
+
     <joint name="pendolo_joint" type="revolute">
         <limit effort="1000.0" lower="-1.5707" upper="1.5707" velocity="0.5"/>
         <axis rpy="0 0 0" xyz="0 1 0"/>
@@ -141,4 +159,23 @@
         <!--        origin mi indica la posizione del pendolo rispetto a base-->
         <origin rpy="0 0 0" xyz="0 0 0.1"/>
     </joint>
+
+    <transmission name="pendolo_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="pendolo_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="pendolo_joint">
+             <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+        
+        </plugin>
+    </gazebo>
 </robot>

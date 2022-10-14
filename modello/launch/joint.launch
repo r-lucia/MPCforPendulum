@@ -1,0 +1,18 @@
+<launch>
+  <arg name="model" default="$(find modello)/urdf/pendolo_inv.urdf.xacro"/>
+  <arg name="rvizconfig" default="$(find modello)/rviz/urdf.rviz" />
+
+  <include file="$(find modello)/launch/gazebo.launch">
+    <arg name="model" value="$(arg model)" />
+  </include>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
+
+  <rosparam command="load"
+            file="$(find modello)/Config/joint.yaml"
+            ns="pend_joint_state_controller" />
+<!--  nome del pachetto:pkg e nome del nodo in type. Il pkg controller_manager è un pachetto di sistema che permette di gestire i giunti attuati su gazebo-->
+  <node name="pend_controller_spawner" pkg="controller_manager" type="spawner"
+    args="pend_joint_state_controller
+          --shutdown-timeout 3"/>
+</launch>

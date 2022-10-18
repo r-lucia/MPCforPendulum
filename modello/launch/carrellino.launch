@@ -14,9 +14,13 @@
   <rosparam command="load"
             file="$(find modello)/Config/carrellino.yaml"
             ns="pend_carr_controller" />
+  <rosparam command="load"
+            file="$(find modello)/Config/pendolo.yaml"
+            ns="pend_pendol_controller" />
 
   <node name="pend_controller_spawner" pkg="controller_manager" type="spawner"
     args="pend_joint_state_controller
           pend_carr_controller
+          pend_pendol_controller
           --shutdown-timeout 3"/>
 </launch>

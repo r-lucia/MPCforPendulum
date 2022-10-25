@@ -17,6 +17,9 @@ g = 9.8  # [m/s^2]
 Ia = 0.019
 k2 = 1 / (M + m)
 k1 = (-m * g * l) / Ia
+
+
+
 # State indexes
 X = 0
 THETA = 1
@@ -28,7 +31,7 @@ UMAX = 1  # number of inputs
 Q = np.diag([10, 7, 0.0, 0.0])
 R = np.diag([0.0000])
 T = 30  # Horizon length
-delta_t = 0.1  # time tick
+delta_t = 0.1 # time tick
 max_F = 70000.0  # Max and minimum forces
 min_F = -70000.0
 
@@ -91,7 +94,7 @@ def mpc_control(x0, x_r):
     constr += [x[:, 0] == x0]
     start = time.time()
     prob = cvxpy.Problem(cvxpy.Minimize(cost), constr)
-    prob.solve(verbose=False)
+    prob.solve(verbose=True)
     end = time.time()
     print("solution took", end - start, "seconds")
 

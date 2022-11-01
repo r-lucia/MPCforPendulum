@@ -37,7 +37,7 @@ def talker():
     m = GEKKO(remote=False)
     m.time = np.linspace(0, 2, 21)
 
-    l = m.Param(0.75)  # lunchezza di metà asta
+    l = m.Param(0.25)  # lunchezza di metà asta
 
     M = m.Param(1)  # [kg]
     mp = m.Param(0.1)  # [kg]
@@ -53,29 +53,29 @@ def talker():
     # Manipulated variable
     u = m.MV(name='u')
     u.STATUS = 1  # questo mi dice può esser modificato dall'ottimizzatore
-    u.DCOST = 0.1  # quanto influeisce sulla funzione obbiettivo la variazione di u
+    #u.DCOST = 0.5  # quanto influeisce sulla funzione obbiettivo la variazione di u
     u.FSTATUS = 0
 
     # Controlled Variable
     s = m.CV(value=pos_carrellino, name='s')
     s.STATUS = 1
     s.FSTATUS = 1
-    s.TAU = 0.2
-    s.SP = s_des
-    s.SPHI= s_des + 0.1
-    s.SPLO= s_des - 0.1
+    s.TAU = 0.1
+    s.SP = 4
+    #s.SPHI= s_des + 0.1
+    #s.SPLO= s_des - 0.1
     s.TR_INIT = 2  # !! devo inserire il valore dato dal nodo
-    s.WSP = 1
+    s.WSP = 10
 
     teta = m.CV(value=teta_pendolo, name='teta')
     teta.STATUS = 1
-    teta.SP = teta_des
+    teta.SP = 0
     teta.FSTATUS = 1
-    teta.TAU = 0.1
+    teta.TAU = 0.01
     teta.TR_INIT = 2
-    teta.SPHI = teta_des + 0.01
-    teta.SPLO = teta_des - 0.01
-    teta.WSP = 10
+    #teta.SPHI = teta_des + 0.01
+    #teta.SPLO = teta_des - 0.01
+    teta.WSP = 100
 
 
     ds = m.CV(value=vel_carrellino, name='ds')
@@ -102,12 +102,14 @@ def talker():
 
     m.Equation(s.dt() == ds)
     m.Equation(teta.dt() == dteta)
-    m.Equation(ds.dt() == ((-k2 * sin_2teta) - (k1 * sin_teta * dteta.dt() ** 2) + u) / k3)
+    m.Equation(ds.dt() == ((-k2 * sin_2teta) - (k1 * sin_teta * dteta ** 2) + u) / k3)
     m.Equation(dteta.dt() == (
-                (k4 * sin_teta) + (k2 * sin_teta) + (0.5 * k1 * sin_2teta * dteta.dt() ** 2) + (cos_teta * u)) / (
+                (k4 * sin_teta) + (2 * k2 * sin_teta) + (0.5 * k1 * sin_2teta * dteta ** 2) + (cos_teta * u)) / (
                            l * k3))
+    # m.Equation(s.dt()==ds)
+    # m.Equation(ds.dt()== (1/M) * u )
     m.options.IMODE = 6 # control
-    m.options.SOLVER= 3
+
 
 
 

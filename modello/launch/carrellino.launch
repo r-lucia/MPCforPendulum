@@ -1,12 +1,12 @@
 <launch>
-  <arg name="model" default="$(find modello)/urdf/pendolo_inv.urdf.xacro" />
+  <arg name="model" default="$(find modello)/urdf/carrellino.urdf.xacro" />
   <arg name="rvizconfig" default="$(find modello)/rviz/urdf.rviz"  />
 
   <include file="$(find modello)/launch/gazebo.launch">
     <arg name="model" value="$(arg model)" />
   </include>
 
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
+<!--   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" /> -->
 
   <rosparam command="load"
             file="$(find modello)/Config/joint.yaml"
@@ -14,13 +14,10 @@
   <rosparam command="load"
             file="$(find modello)/Config/carrellino.yaml"
             ns="pend_carr_controller" />
-  <rosparam command="load"
-            file="$(find modello)/Config/pendolo.yaml"
-            ns="pend_pendol_controller" />
+
 
   <node name="pend_controller_spawner" pkg="controller_manager" type="spawner"
     args="pend_joint_state_controller
           pend_carr_controller
-          pend_pendol_controller
           --shutdown-timeout 3"/>
 </launch>

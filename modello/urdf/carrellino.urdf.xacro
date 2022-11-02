@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="visual">
+    <material name="violetto">
+        <color rgba="1 0 1 1 "/>
+    </material>
+    <material name="acqua_marina">
+        <color rgba="0 1 1 1"/>
+    </material>
+
+    <material name="base">
+        <color rgba="1 1 1 0.5"/>
+    </material>
+<!-- Questo è il link base nella terna base_link rispetto alla quale vengono definite tutte le altre terne
+tale elemento ha il solo scopo di esser di riferimento rispetto al robot mobile -->
+    <link name="world"/>
+    <joint name="fixed" type="fixed">
+        <parent  link="world"/>
+        <child link="base_link"/>
+    </joint>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="0.6 0.4 0.001"/>
+            </geometry>
+            <material name="base"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.6 0.4 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <link name="carrellino">
+        <!--questo è il solo elemento mobile attuato-->
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="0.6 0.4 0.2"/>
+            </geometry>
+            <material name="violetto"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.6 0.4 0.2"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <joint name="base_carrellino" type="prismatic">
+        <parent link="base_link"/>
+        <child link="carrellino"/>
+        <limit effort="999999.0" lower="-50" upper="50" velocity="5000"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+
+
+<transmission name="carrellino_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="carrellino_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="base_carrellino">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+
+    <link name="left_wheel">
+        <visual>
+            <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.035"/>
+            </geometry>
+            <material name="acqua_marina"/>
+        </visual>
+        <collision>
+            <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.035"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+
+    </link>
+
+    <joint name="left_wheel_joint" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <origin rpy="0 0 0" xyz="-0.2 0 -0.133"/>
+        <parent link="carrellino"/>
+        <child link="left_wheel"/>
+    </joint>
+
+
+
+
+    <link name="right_wheel">
+        <visual>
+            <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.035"/>
+            </geometry>
+            <material name="acqua_marina"/>
+        </visual>
+        <collision>
+            <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.035"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <joint name="right_wheel_joint" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <origin rpy="0 0 0" xyz="0.2 0 -0.133"/>
+        <parent link="carrellino"/>
+        <child link="right_wheel"/>
+    </joint>
+
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+
+        </plugin>
+    </gazebo>
+</robot>
